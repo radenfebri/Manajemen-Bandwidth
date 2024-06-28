@@ -7,7 +7,6 @@
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-deck row-cards">
-            <!--  -->
             <div class="col-12">
                 <div class="row row-cards">
                     <div class="col-sm-6 col-lg-3">
@@ -83,7 +82,43 @@
         </div>
     </div>
 </div>
+</div>
 
+<div class="col-lg-9">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Traffic Interface</h3>
+            <div id="chart-mentions" class="chart-lg"></div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-3">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Select Interface</h3>
+            <div class="input-group input-group-flat mb-3">
+                <select name="interface" id="interface" class="form-control">
+                    @foreach ($interface as $item)
+                    <option value="{{ $item['name'] }}">{{ $item['name'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="traffic"></span>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    setInterval('traffic();', 1000);
+    function traffic() {
+        var traffic = $('#interface').val();
+        var url = '{{ route("dashboard-traffic", ":traffic") }}';
+        // console.log(traffic);
+        
+        $('#traffic').load(url.replace(':traffic', traffic));
+    }
+</script>
 
 
 @endsection
