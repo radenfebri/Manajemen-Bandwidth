@@ -88,4 +88,40 @@ class HomeController extends Controller
 
         return view('realtime.traffic', $data);
     }
+
+
+    public function trafficcharts($trafficcharts)
+    {
+        $mikrotik = Mikrotik::first();
+        if ($mikrotik) {
+            $ip = $mikrotik->ip;
+            $user = $mikrotik->user;
+            $pass = $mikrotik->password;
+        } else {
+            Mikrotik::truncate();
+            return view('error');
+        }
+
+        $API = new RouterosAPI();
+        $API->debug('false');
+
+        if ($API->connect($ip, $user, $pass)) {
+            $trafficcharts = $API->comm('/interface/monitor-traffic', array(
+                'interface' => $trafficcharts,
+                'once' => '',
+            ));
+
+            $rx = $trafficcharts[0]['rx-bits-per-second'];
+            $tx = $trafficcharts[0]['tx-bits-per-second'];
+        } else {
+            return 'Koneksi Gagal';
+        }
+
+        $data = [
+            'rx' => $rx,
+            'tx' => $tx,
+        ];
+
+        return view('realtime.charts', $data);
+    }
 }

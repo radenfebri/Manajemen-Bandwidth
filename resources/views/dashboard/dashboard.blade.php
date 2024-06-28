@@ -88,8 +88,9 @@
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">Traffic Interface</h3>
-            <div id="chart-mentions" class="chart-lg"></div>
         </div>
+        <span id="chart-mentions"></span>
+
     </div>
 </div>
 <div class="col-lg-3">
@@ -118,6 +119,125 @@
         
         $('#traffic').load(url.replace(':traffic', traffic));
     }
+</script>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chart = Highcharts.chart('chart-mentions', {
+            title: {
+                text: 'Traffic Interface'
+            },
+            xAxis: {
+                categories: ['RX', 'TX']
+            },
+            chart: {
+                type: 'spline'
+            },
+            series: [{
+                name: 'Upload',
+                data: [null, null] // Data upload awal
+            }, {
+                name: 'Download',
+                data: [null, null] // Data download awal
+            }],
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+
+        // Fungsi untuk memperbarui data grafik secara periodik
+        function updateChart() {
+            // Dapatkan data traffic yang baru
+            var uploadData = Math.random() * 1000; // Contoh data traffic upload acak
+            var downloadData = Math.random() * 1000; // Contoh data traffic download acak
+
+            // Perbarui data grafik
+            chart.series[0].addPoint(uploadData, true, true); // Perbarui data upload
+            chart.series[1].addPoint(downloadData, true, true); // Perbarui data download
+
+            // Panggil fungsi ini secara periodik (misalnya setiap 1 detik)
+            setTimeout(updateChart, 3000);
+        }
+
+        // Panggil fungsi pertama kali untuk memulai perbaruan grafik
+        updateChart();
+    });
+</script> --}}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chart = Highcharts.chart('chart-mentions', {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Traffic Interface'
+            },
+            xAxis: {
+                categories: ['RX', 'TX'],
+                accessibility: {
+                    description: 'Upload and Download'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Traffic'
+                },
+                labels: {
+                    format: '{value} Mbps'
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Upload',
+                marker: {
+                    symbol: 'circle'
+                },
+                data: [null, null] // Data upload awal
+            }, {
+                name: 'Download',
+                marker: {
+                    symbol: 'circle'
+                },
+                data: [null, null] // Data download awal
+            }]
+        });
+
+        // Fungsi untuk memperbarui data grafik secara periodik
+        function updateChart() {
+            // Dapatkan data traffic yang baru secara acak
+            var uploadData = Math.random() * 1000; // Data traffic upload acak (dalam Mbps)
+            var downloadData = Math.random() * 1000; // Data traffic download acak (dalam Mbps)
+
+            // Perbarui data grafik
+            chart.series[0].addPoint(uploadData, true, true); // Perbarui data upload
+            chart.series[1].addPoint(downloadData, true, true); // Perbarui data download
+
+            // Panggil fungsi ini secara periodik (misalnya setiap 1 detik)
+            setTimeout(updateChart, 1000);
+        }
+
+        // Panggil fungsi pertama kali untuk memulai perbaruan grafik
+        updateChart();
+    });
 </script>
 
 

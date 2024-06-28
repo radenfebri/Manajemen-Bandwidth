@@ -16,6 +16,7 @@ Route::get('change-password', [SettingController::class, 'changePassword'])->nam
 Route::put('change-pasword/update', [SettingController::class, 'updatePassword'])->name('updatePassword');
 Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 Route::get('dashboard/{traffic}', [HomeController::class, 'traffic'])->name('dashboard-traffic');
+Route::get('dashboard/charts/{trafficcharts}', [HomeController::class, 'trafficcharts'])->name('dashboard-charts');
 Route::post('create-mikrotik', [MikrotikController::class, 'create'])->name('create-mikrotik');
 Route::get('address', [AddressController::class, 'index'])->name('address');
 Route::get('address/create', [AddressController::class, 'create'])->name('create-address');
