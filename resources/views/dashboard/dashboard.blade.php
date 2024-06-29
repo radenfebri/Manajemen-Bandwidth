@@ -4,6 +4,12 @@
 
 @section('content')
 
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+{{-- <script src="https://code.highcharts.com/6.1.4/highcharts.js"></script> --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="page-body">
     <div class="container-xl">
         <div class="row row-deck row-cards">
@@ -90,7 +96,6 @@
             <h3 class="card-title">Traffic Interface</h3>
         </div>
         <span id="chart-mentions"></span>
-
     </div>
 </div>
 <div class="col-lg-3">
@@ -109,7 +114,6 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
     setInterval('traffic();', 1000);
     function traffic() {
@@ -122,123 +126,128 @@
 </script>
 
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var chart = Highcharts.chart('chart-mentions', {
-            title: {
-                text: 'Traffic Interface'
-            },
-            xAxis: {
-                categories: ['RX', 'TX']
-            },
-            chart: {
-                type: 'spline'
-            },
-            series: [{
-                name: 'Upload',
-                data: [null, null] // Data upload awal
-            }, {
-                name: 'Download',
-                data: [null, null] // Data download awal
-            }],
-            plotOptions: {
-                spline: {
-                    marker: {
-                        enabled: false
-                    }
-                }
-            }
-        });
-
-        // Fungsi untuk memperbarui data grafik secara periodik
-        function updateChart() {
-            // Dapatkan data traffic yang baru
-            var uploadData = Math.random() * 1000; // Contoh data traffic upload acak
-            var downloadData = Math.random() * 1000; // Contoh data traffic download acak
-
-            // Perbarui data grafik
-            chart.series[0].addPoint(uploadData, true, true); // Perbarui data upload
-            chart.series[1].addPoint(downloadData, true, true); // Perbarui data download
-
-            // Panggil fungsi ini secara periodik (misalnya setiap 1 detik)
-            setTimeout(updateChart, 3000);
-        }
-
-        // Panggil fungsi pertama kali untuk memulai perbaruan grafik
-        updateChart();
-    });
-</script> --}}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var chart = Highcharts.chart('chart-mentions', {
-            chart: {
-                type: 'spline'
-            },
-            title: {
-                text: 'Traffic Interface'
-            },
-            xAxis: {
-                categories: ['RX', 'TX'],
-                accessibility: {
-                    description: 'Upload and Download'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Traffic'
-                },
-                labels: {
-                    format: '{value} Mbps'
-                }
-            },
-            tooltip: {
-                crosshairs: true,
-                shared: true
-            },
-            plotOptions: {
-                spline: {
-                    marker: {
-                        radius: 4,
-                        lineColor: '#666666',
-                        lineWidth: 1
+    $(document).ready(function() {
+        var chart;
+        var selectedInterface = $('#interface').val();
+
+        function createChart() {
+            chart = Highcharts.chart('chart-mentions', {
+                chart: {
+                    type: 'spline',
+                    events: {
+                        load: updateChart
                     }
-                }
-            },
-            series: [{
-                name: 'Upload',
-                marker: {
-                    symbol: 'circle'
                 },
-                data: [null, null] // Data upload awal
-            }, {
-                name: 'Download',
-                marker: {
-                    symbol: 'circle'
+                title: {
+                    text: 'Charts Realtime'
                 },
-                data: [null, null] // Data download awal
-            }]
-        });
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150
+                },
+                yAxis: {
+                    title: {
+                        text: 'Bandwidth (MB)'
+                    },
+                    labels: {
+                        formatter: function() {
+                            return this.value + ' MB';
+                        }
+                    }
+                },
+                tooltip: {
+                    formatter: function() {
+                        return '<b>' + this.series.name + '</b><br/>' +
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 2) + ' MB';
+                    }
+                },
+                series: [{
+                    name: 'Upload (TX)',
+                    type: 'spline',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
 
-        // Fungsi untuk memperbarui data grafik secara periodik
+                        for (i = -19; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * 1000,
+                                y: 0
+                            });
+                        }
+                        return data;
+                    }())
+                }, {
+                    name: 'Download (RX)',
+                    type: 'spline',
+                    data: (function () {
+                        var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                        for (i = -19; i <= 0; i += 1) {
+                            data.push({
+                                x: time + i * 1000,
+                                y: 0
+                            });
+                        }
+                        return data;
+                    }())
+                }]
+            });
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 MB';
+            const k = 1024,
+                dm = decimals < 0 ? 0 : decimals,
+                sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'],
+                i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+        }
+
         function updateChart() {
-            // Dapatkan data traffic yang baru secara acak
-            var uploadData = Math.random() * 1000; // Data traffic upload acak (dalam Mbps)
-            var downloadData = Math.random() * 1000; // Data traffic download acak (dalam Mbps)
+            selectedInterface = $('#interface').val(); // Mengupdate nilai selectedInterface saat ada perubahan pilihan
 
-            // Perbarui data grafik
-            chart.series[0].addPoint(uploadData, true, true); // Perbarui data upload
-            chart.series[1].addPoint(downloadData, true, true); // Perbarui data download
+            $.ajax({
+                url: '{{ route("dashboard-charts", ":trafficcharts") }}'.replace(':trafficcharts', selectedInterface),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    try {
+                        var x = (new Date()).getTime(), // Waktu saat ini
+                            uploadData = formatBytes(parseInt(data.tx)),
+                            downloadData = formatBytes(parseInt(data.rx));
 
-            // Panggil fungsi ini secara periodik (misalnya setiap 1 detik)
+                        if (chart) {
+                            var seriesUpload = chart.series[0],
+                                seriesDownload = chart.series[1];
+
+                            seriesUpload.addPoint([x, uploadData], true, true);
+                            seriesDownload.addPoint([x, downloadData], true, true);
+
+                            chart.setTitle(null, { text: 'Interface: ' + selectedInterface }); // Memperbarui judul chart dengan nama interface yang terpilih
+                        }
+                    } catch (e) {
+                        console.log('Error parsing JSON:', e);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+
             setTimeout(updateChart, 1000);
         }
 
-        // Panggil fungsi pertama kali untuk memulai perbaruan grafik
-        updateChart();
+        createChart();
     });
 </script>
+
+
 
 
 @endsection

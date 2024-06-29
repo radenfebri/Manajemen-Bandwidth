@@ -122,6 +122,6 @@ class HomeController extends Controller
             'tx' => $tx,
         ];
 
-        return view('realtime.charts', $data);
+        return response()->json($data);
     }
 }

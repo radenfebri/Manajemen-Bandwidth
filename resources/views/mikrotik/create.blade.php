@@ -32,7 +32,7 @@
                         </span>
                         @enderror
                     </div>
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Password Mikrotik</label>
                     <div class="input-group input-group-flat">
                         <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password"  placeholder="Your password" />
                         <span class="input-group-text">

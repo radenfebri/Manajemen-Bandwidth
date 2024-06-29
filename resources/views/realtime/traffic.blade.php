@@ -1,5 +1,5 @@
-Traffic Upload (RX) = <b>{{ formatBytes($rx, 2) }}</b><br>
-Traffic Download (TX) = <b>{{ formatBytes($tx, 2) }}</b><br>
+Traffic Upload (TX) = <b>{{ formatBytes($tx, 2) }}</b><br>
+Traffic Download (RX) = <b>{{ formatBytes($rx, 2) }}</b><br>
 
 @php function formatBytes($bytes, $decimal = null){
     $satuan = ['Bytes', 'Kb', 'Mb', 'Gb', 'Tb'];
