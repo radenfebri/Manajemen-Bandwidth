@@ -55,7 +55,7 @@ class LoginController extends Controller
 
         toast('Selamat anda berhasil Login!','success');
         
-        return redirect()->intended('dashboard');
+        return redirect()->route('dashboard');
     }
 
 
