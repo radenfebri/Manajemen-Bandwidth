@@ -26,6 +26,7 @@
                 <div class="card">
                     <form action="{{ route('updatePassword') }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="row card-body">
                             <div class="col-4">
                                 <div class="mb-3">
