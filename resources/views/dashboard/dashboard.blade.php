@@ -7,7 +7,6 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-{{-- <script src="https://code.highcharts.com/6.1.4/highcharts.js"></script> --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="page-body">
@@ -127,6 +126,7 @@
 
 
 
+
 <script>
     $(document).ready(function() {
         var chart;
@@ -167,6 +167,7 @@
                 series: [{
                     name: 'Upload (TX)',
                     type: 'spline',
+                    color: 'blue',
                     data: (function () {
                         var data = [],
                             time = (new Date()).getTime(),
@@ -183,6 +184,7 @@
                 }, {
                     name: 'Download (RX)',
                     type: 'spline',
+                    color: 'red',
                     data: (function () {
                         var data = [],
                             time = (new Date()).getTime(),
@@ -206,7 +208,7 @@
                 dm = decimals < 0 ? 0 : decimals,
                 sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'],
                 i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+            return parseFloat((bytes / Math.pow(k, 2)).toFixed(dm)); // Konversi bytes ke MB
         }
 
         function updateChart() {
