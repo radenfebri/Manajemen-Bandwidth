@@ -131,7 +131,14 @@
     $(document).ready(function() {
         var chart;
         var selectedInterface = $('#interface').val();
-
+        
+        // Set global options for Highcharts to use WIB (UTC+7)
+        Highcharts.setOptions({
+            time: {
+                timezoneOffset: -7 * 60 // WIB is UTC+7
+            }
+        });
+        
         function createChart() {
             chart = Highcharts.chart('chart-mentions', {
                 chart: {
@@ -160,8 +167,8 @@
                 tooltip: {
                     formatter: function() {
                         return '<b>' + this.series.name + '</b><br/>' +
-                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                            Highcharts.numberFormat(this.y, 2) + ' MB';
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2) + ' MB';
                     }
                 },
                 series: [{
@@ -170,9 +177,9 @@
                     color: 'blue',
                     data: (function () {
                         var data = [],
-                            time = (new Date()).getTime(),
-                            i;
-
+                        time = (new Date()).getTime(),
+                        i;
+                        
                         for (i = -19; i <= 0; i += 1) {
                             data.push({
                                 x: time + i * 1000,
@@ -187,9 +194,9 @@
                     color: 'red',
                     data: (function () {
                         var data = [],
-                            time = (new Date()).getTime(),
-                            i;
-
+                        time = (new Date()).getTime(),
+                        i;
+                        
                         for (i = -19; i <= 0; i += 1) {
                             data.push({
                                 x: time + i * 1000,
@@ -201,19 +208,19 @@
                 }]
             });
         }
-
+        
         function formatBytes(bytes, decimals = 2) {
             if (bytes === 0) return '0 MB';
             const k = 1024,
-                dm = decimals < 0 ? 0 : decimals,
-                sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'],
-                i = Math.floor(Math.log(bytes) / Math.log(k));
+            dm = decimals < 0 ? 0 : decimals,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, 2)).toFixed(dm)); // Konversi bytes ke MB
         }
-
+        
         function updateChart() {
             selectedInterface = $('#interface').val(); // Mengupdate nilai selectedInterface saat ada perubahan pilihan
-
+            
             $.ajax({
                 url: '{{ route("dashboard-charts", ":trafficcharts") }}'.replace(':trafficcharts', selectedInterface),
                 type: 'GET',
@@ -221,16 +228,16 @@
                 success: function(data) {
                     try {
                         var x = (new Date()).getTime(), // Waktu saat ini
-                            uploadData = formatBytes(parseInt(data.tx)),
-                            downloadData = formatBytes(parseInt(data.rx));
-
+                        uploadData = formatBytes(parseInt(data.tx)),
+                        downloadData = formatBytes(parseInt(data.rx));
+                        
                         if (chart) {
                             var seriesUpload = chart.series[0],
-                                seriesDownload = chart.series[1];
-
+                            seriesDownload = chart.series[1];
+                            
                             seriesUpload.addPoint([x, uploadData], true, true);
                             seriesDownload.addPoint([x, downloadData], true, true);
-
+                            
                             chart.setTitle(null, { text: 'Interface: ' + selectedInterface }); // Memperbarui judul chart dengan nama interface yang terpilih
                         }
                     } catch (e) {
@@ -241,10 +248,10 @@
                     console.log('Error:', error);
                 }
             });
-
+            
             setTimeout(updateChart, 1000);
         }
-
+        
         createChart();
     });
 </script>
